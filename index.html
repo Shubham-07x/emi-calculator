@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMI Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+
+    body {
+      font-family: "Poppins", sans-serif;
+      line-height: 1.6;
+      color: #292929;
+    }
+
+    :root {
+      --thumb-color: #ddbc6a;
+      --track-color: #f7f7f7;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .gold-mine-cal-header {
+      font-size: 30px;
+      color: #092D0B;
+      text-align: center;
+      margin-bottom: 20px;
+	  font-family: "justus-roman" !important;
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 10px 0;
+    }
+
+    .form-group-default {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    .form-group-default label {
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 50%;
+      height: 40px;
+      padding: 0 16px;
+      font-family: "Poppins", sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      border: 1px solid #ddbc6a;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .btn {
+      height: 40px;
+      width: 30%;
+      padding: 0 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: "Poppins", sans-serif;
+      background: #ddbc6a;
+      border: 1px solid #ddbc6a;
+      color: #FFFFFF;
+      font-size: 16px;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+
+    .form-range {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      outline: none;
+      background-color: #f7f7f7;
+    }
+
+    .form-range::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #ddbc6a;
+      cursor: pointer;
+    }
+
+    .form-range::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 50%;
+      background-color: #ddbc6a;
+      cursor: pointer;
+    }
+
+    .form-range::-ms-thumb {
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 50%;
+      background-color: #ddbc6a;
+      cursor: pointer;
+    }
+	  
+	  ul, ol {
+    margin: 0 0 1.4em 1.6em;
+    padding: 0;
+    list-style: none;
+}
+
+
+    .form-range {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 15px;
+      border-radius: 5px;
+      background-color: var(--track-color);
+      outline: none;
+    }
+
+    .form-range::-webkit-slider-runnable-track {
+      background-color: var(--track-color);
+      border-radius: 10px;
+    }
+
+    .form-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background-color: var(--thumb-color);
+      margin-top: 0px;
+    }
+
+    .form-range::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background-color: var(--thumb-color);
+      margin-top: -3.5px;
+    }
+
+    .form-range::-ms-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background-color: var(--thumb-color);
+      margin-top: -3.5px;
+    }
+
+    h6{
+        font-size: 16px;
+        font-family:"Arial" !important;
+        font-weight: 400;
+        color:#292929;
+    }
+
+    @media screen and (max-width: 768px) {
+      .row {
+        flex-direction: column;
+      }
+	.list-group-item{
+			list-style:none !important;
+		}
+      .row .col-lg-6,
+      .row .col-sm-12,
+      .row .col-md-6 {
+        flex-basis: 100%;
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .gold-mine-cal-header {
+        font-size: 24px;
+      }
+
+      .row .row-input:nth-child(1) {
+        margin-bottom: 0;
+      }
+
+      .right-section {
+        margin-top: 20px;
+      }
+
+      #myChart {
+        height: 180px;
+        width: 100%;
+        margin-top: 1.5rem;
+        display: block;
+      }
+
+      .list-group-item .text-secondary {
+        font-size: 12px;
+      }
+
+      .list-group-item .fs-2,
+      .list-group-item .fs-4,
+      #total-payment,
+      #total-discount,
+      #total-jewellery-worth,
+      #total-gold-jewellery-worth,
+      #total-effectively-pay {
+        font-size: 24px;
+      }
+    }
+
+.chart-container {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.chart-container canvas {
+  height: 180px;
+  width: 100%;
+  max-width: 270px; 
+  display: block;
+}
+
+.right-section {
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+}
+
+.list-group-item p {
+  margin-bottom: 0;
+}
+
+.list-group-item .badge {
+  background-color: transparent;
+}
+
+.list-group-item .text-secondary {
+  font-size: 12px;
+}
+
+.list-group-item .fs-2,
+.list-group-item .fs-4,
+#total-payment,
+#total-discount,
+#total-jewellery-worth,
+#total-gold-jewellery-worth,
+#total-effectively-pay {
+  font-size: 24px;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 992px) {
+  .row .col-lg-6,
+  .row .col-md-4,
+  .row .col-lg-8 {
+    flex-basis: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .chart-container canvas {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    padding: 0 10px;
+  }
+
+  .chart-container canvas {
+    height: 180px;
+    width: 100%;
+    margin-top: 1.5rem;
+    display: block;
+  }
+
+}
+	  .module img {
+    border: 0;
+    vertical-align: middle !important;
+		  padding-bottom: 5px;
+}
+	  h6 {
+		  margin-left: 10px !important;
+	  }
+
+	</style>
+</head>
+
+<body>
+  <div class="container">
+    <h3 class="gold-mine-cal-header text-center">EMI Calculator</h3>
+
+    <div class="row">
+      <div class="col-lg-6 col-sm-12 col-md-6 mb-3">
+        <div class="form-group form-group-default mb-0">
+          <label class="control-label">Monthly amount</label>
+          <div class="input-with-button">
+            <input type="number" class="form-control" value="1000" step="500" min="1000" max="100000" autocomplete="off"
+              data-val="true" data-val-number="The field Amount must be a number." id="amount-range">
+              <button class="btn btn-outline-primary rounded-0 goldmine-check" onclick="btnCheckClick()">Check</button>
+          </div>
+        </div>
+        <span id="errorMsg" style="color:red"></span>
+        <h6 class="my-3" style="margin-top: 20px; margin-bottom:15px;">Slide or enter monthly Installment Amount</h6>
+        <input type="range" class="form-range" min="1000" max="100000" value="1000" id="amount-range-selector">
+        <canvas id="myChart" style="height: 180px; width: 200px; margin-top: 3rem; display: block;" width="270"
+          height="247" class="chartjs-render-monitor"></canvas>
+      </div>
+      <div class="col-lg-6 col-sm-12 col-md-6">
+        <div class="right-section">
+          <ul class="list-group list-group-flush bg-white">
+            <li class="list-group-item ps-0 d-flex justify-content-between align-items-start bg-white border-0">
+              <div class="d-flex align-items-baseline">
+                <span class="badge bg-pink rounded-0 pt-1 pb-2 me-2"> </span>
+                <p class="d-grid">Your total payment<span class="text-secondary">(Period of 10 months)</span></p>
+              </div>
+              <div class="d-flex align-items-center">
+                <img src=".\rupee.jpeg" width="12" class="me-1">
+                <span class="d-flex align-items-center" id="total-payment">10,000.00</span>
+              </div>
+            </li>
+
+            <li class="list-group-item ps-0 d-flex justify-content-between align-items-start bg-white" style="border-bottom: 1px solid #ddd;">
+              <div class="d-flex align-items-baseline">
+                <span class="badge bg-green rounded-0 pt-1 pb-2 me-2"></span>
+                <p class="d-grid">
+                  100% Discount on 11th installment<span class="text-secondary">(100% off 1 month installment
+                    value)</span>
+                </p>
+              </div>
+
+              <div class="d-flex">
+                <img src=".\rupee.jpeg" width="12" class="me-1">
+                <span class="d-flex align-items-center" id="total-discount">1,000.00</span>
+              </div>
+            </li>
+
+            <li class="list-group-item ps-0 d-flex justify-content-between align-items-start bg-white">
+              Buy any Diamond jewellery worth :
+              <div class="d-flex align-items-center">
+                <img src=".\rupee.jpeg" width="12" class="me-1">
+                <span class="d-flex align-items-baseline fs-2" id="total-jewellery-worth">11,000.00</span>
+              </div>
+            </li>
+            <li class="list-group-item ps-0 d-flex justify-content-between align-items-start bg-white">
+              Buy any Gold jewellery worth :
+              <div class="d-flex align-items-center">
+                <img src=".\rupee.jpeg" width="12" class="me-1">
+                <span class="d-flex align-items-baseline fs-2" id="total-gold-jewellery-worth">10,750.00</span>
+              </div>
+            </li>
+            <li class="list-group-item ps-0 d-flex justify-content-between align-items-start bg-white">
+              You effectively Pay
+              <div class="d-flex align-items-center">
+                <img src=".\rupee.jpeg" width="12" class="me-1">
+                <span class="d-flex align-items-baseline fs-4" id="total-effectively-pay">10,000.00</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+ 
+  var slider = document.getElementById("amount-range-selector");
+  var totalAmount = document.getElementById("amount-range");
+  var formattedTotalAmount = slider.value;
+  var currencyTotalAmount = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(formattedTotalAmount);
+  totalAmount.innerHTML = currencyTotalAmount;
+
+  var totalPayment = document.getElementById("total-payment");
+  var formattedTotalPayment = slider.value * 10;
+  var currencyTotalPayment = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(formattedTotalPayment);
+  totalPayment.innerHTML = currencyTotalPayment;
+
+  var totalDiscount = document.getElementById("total-discount");
+  totalDiscount.innerHTML = currencyTotalAmount;
+
+  var totalJewelleryWorth = document.getElementById("total-jewellery-worth");
+  var formattedJewelleryWorth = slider.value * 11;
+  var currencyJewelleryWorth = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(formattedJewelleryWorth);
+  totalJewelleryWorth.innerHTML = currencyJewelleryWorth;
+
+  var totalGoldJewelleryWorth = document.getElementById("total-gold-jewellery-worth");
+  var formattedGoldJewelleryWorth = (slider.value * 75 / 100) + (totalAmount.value * 10);
+  var currencyGoldJewelleryWorth = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(formattedGoldJewelleryWorth);
+  totalGoldJewelleryWorth.innerHTML = currencyGoldJewelleryWorth;
+
+  var totalEffectivelyPay = document.getElementById("total-effectively-pay");
+  totalEffectivelyPay.innerHTML = currencyTotalPayment;
+
+  var xValues = ["We pay", "You pay"];
+  var yValues = [formattedTotalAmount, formattedTotalPayment];
+  var barColors = ["#092D0B", "#ddbc6a"];
+
+  var chart = new Chart("myChart", {
+    type: "pie",
+    data: {
+      labels: xValues,
+      datasets: [{
+        backgroundColor: barColors,
+        data: yValues
+      }]
+    },
+    options: {
+      responsive: true,
+      tooltips: {
+        enabled: false
+      },
+      hover: {
+        mode: null
+      },
+      rotation: (-0.5 * Math.PI) - (-75 / 180 * Math.PI),
+      title: {
+        text: ""
+      },
+      legend: {
+        position: 'bottom',
+        onClick: function (event, legendItem) {}
+      },
+      plugins: {
+        datalabels: {
+          color: '#092DOB',
+          fontSize: 28
+        }
+      }
+    }
+  });
+
+  slider.oninput = function () {
+    var currentAmount = this.value;
+    var currencyCurrentAmount = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmount);
+
+    var currentAmountEffectivelyAndTotalPayment = currentAmount * 10;
+    var currencyAmountEffectivelyAndTotalPayment = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmountEffectivelyAndTotalPayment);
+
+    var currentAmountTotalJewelleryWorth = currentAmount * 11;
+    var currencyAmountTotalJewelleryWorth = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmountTotalJewelleryWorth);
+
+    var currentAmountTotalGoldJewelleryWorth = (currentAmount * 75 / 100) + (currentAmount * 10);
+    var currencyAmountTotalGoldJewelleryWorth = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmountTotalGoldJewelleryWorth);
+
+    totalAmount.value = currentAmount;
+    totalPayment.innerHTML = currencyAmountEffectivelyAndTotalPayment;
+    totalDiscount.innerHTML = currencyCurrentAmount;
+    totalJewelleryWorth.innerHTML = currencyAmountTotalJewelleryWorth;
+    totalEffectivelyPay.innerHTML = currencyAmountEffectivelyAndTotalPayment;
+    totalGoldJewelleryWorth.innerHTML = currencyAmountTotalGoldJewelleryWorth;
+
+    chart.data.datasets[0].data[0] = currentAmount;
+    chart.data.datasets[0].data[1] = currentAmount * 10;
+    chart.update();
+  };
+
+  function btnCheckClick() {
+    var currentAmount = totalAmount.value;
+    var currencyCurrentAmount = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmount);
+
+    var currentAmountEffectivelyAndTotalPayment = currentAmount * 10;
+    var currencyAmountEffectivelyAndTotalPayment = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmountEffectivelyAndTotalPayment);
+
+    var currentAmountTotalJewelleryWorth = currentAmount * 11;
+    var currencyAmountTotalJewelleryWorth = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmountTotalJewelleryWorth);
+
+    var currentAmountTotalGoldJewelleryWorth = (currentAmount * 75 / 100) + (currentAmount * 10);
+    var currencyAmountTotalGoldJewelleryWorth = new Intl.NumberFormat('en-IN', { currency: 'INR', minimumFractionDigits: 2 }).format(currentAmountTotalGoldJewelleryWorth);
+
+    totalAmount.value = currentAmount;
+    totalPayment.innerHTML = currencyAmountEffectivelyAndTotalPayment;
+    totalDiscount.innerHTML = currencyCurrentAmount;
+    totalJewelleryWorth.innerHTML = currencyAmountTotalJewelleryWorth;
+    totalEffectivelyPay.innerHTML = currencyAmountEffectivelyAndTotalPayment;
+    totalGoldJewelleryWorth.innerHTML = currencyAmountTotalGoldJewelleryWorth;
+
+    slider.value = totalAmount.value;
+    chart.data.datasets[0].data[0] = currentAmount;
+    chart.data.datasets[0].data[1] = currentAmount * 10;
+    chart.update();
+  }
+
+  var checkButton = document.querySelector(".goldmine-check");
+  checkButton.addEventListener("click", btnCheckClick);
+
+  window.onload = function () {
+    chart.render();
+  };
+
+</script>
+
+  
+</body>
+</html>
